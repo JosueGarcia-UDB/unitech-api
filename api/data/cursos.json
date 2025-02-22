@@ -1,0 +1,31 @@
+{
+  "cursos": [
+    {
+      "id": 1,
+      "titulo": "Introducción a la Programación",
+      "categoria": "programacion",
+      "descripcion": "Curso básico de programación para principiantes",
+      "duracion": "8 semanas",
+      "precio": 99,
+      "nivel": "principiante"
+    },
+    {
+      "id": 2,
+      "titulo": "JavaScript Avanzado",
+      "categoria": "programacion",
+      "descripcion": "Curso avanzado de JavaScript y ES6+",
+      "duracion": "10 semanas",
+      "precio": 149,
+      "nivel": "avanzado"
+    },
+    {
+      "id": 3,
+      "titulo": "Diseño UX/UI",
+      "categoria": "diseno",
+      "descripcion": "Fundamentos del diseño de experiencia de usuario",
+      "duracion": "6 semanas",
+      "precio": 129,
+      "nivel": "intermedio"
+    }
+  ]
+}
