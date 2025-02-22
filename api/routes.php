@@ -1,53 +1,37 @@
 <?php
-function matchRoute($method, $uri) {
-    $routes = [
-        // Rutas públicas
-        ['GET', ['escuelas'], 'escuelas', 'getEscuelas', false],
-        ['GET', ['escuelas', '{categoria}'], 'escuelas', 'getEscuelasByCategoria', false],
-        ['GET', ['escuelas', '{categoria}', '{curso}'], 'escuelas', 'getCursoDetalle', false],
-        ['GET', ['cursos'], 'cursos', 'getCursos', false],
-        ['GET', ['blog'], 'blog', 'getBlogPosts', false],
-        ['GET', ['blog', '{id}'], 'blog', 'getBlogPost', false],
-        ['POST', ['usuarios', 'registro'], 'usuarios', 'registrarUsuario', false],
-        ['POST', ['usuarios', 'login'], 'usuarios', 'loginUsuario', false],
+require_once __DIR__ . '/controllers/cursos.php';
+require_once __DIR__ . '/controllers/users.php';
+require_once __DIR__ . '/utils/jwt.php';
 
-        // Rutas protegidas (requieren JWT)
-        ['POST', ['cursos', 'inscribirse'], 'cursos', 'inscribirseEnCurso', true],
-        ['GET', ['usuarios', 'perfil'], 'usuarios', 'getPerfil', true],
-        ['PUT', ['usuarios', 'actualizar'], 'usuarios', 'actualizarPerfil', true],
-        ['PUT', ['usuarios', 'cambiar-password'], 'usuarios', 'cambiarPassword', true],
-        ['GET', ['premium'], 'premium', 'getContenidoPremium', true],
-        ['POST', ['blog', 'comentar'], 'blog', 'comentarBlog', true],
-        ['POST', ['cursos', 'completar', '{id}'], 'cursos', 'marcarCursoCompletado', true],
-        ['DELETE', ['usuarios', 'eliminar'], 'usuarios', 'eliminarCuenta', true],
-        ['DELETE', ['cursos', 'desinscribirse', '{id}'], 'cursos', 'desinscribirseDeCurso', true],
-    ];
+function route($method, $uri) {
+    // Debug
+    error_log("Method: $method, URI: " . print_r($uri, true));
 
-    foreach ($routes as [$routeMethod, $routeUri, $controller, $handler, $requiresAuth]) {
-        if ($method === $routeMethod && matchUriPattern($uri, $routeUri)) {
-            return [
-                'controller' => $controller,
-                'handler' => $handler,
-                'requiresAuth' => $requiresAuth
-            ];
-        }
-    }
-    return null;
-}
-
-function matchUriPattern($uri, $pattern)
-{
-    if (count($uri) !== count($pattern)) {
-        return false;
+    // Construir la ruta
+    $route = "$method " . ($uri[0] ?? '');
+    if (isset($uri[1])) {
+        $route .= "/$uri[1]";
     }
 
-    foreach ($uri as $i => $segment) {
-        if (preg_match('/^{.+}$/', $pattern[$i])) {
-            continue;
-        }
-        if ($segment !== $pattern[$i]) {
-            return false;
-        }
+    error_log("Route being matched: $route");
+
+    switch ($route) {
+        case 'GET cursos':
+            return getCursos();
+        case 'POST cursos':
+            return agregarCurso();
+        case 'POST users':
+            return registrarUsuario();
+        case 'POST users/login':
+            return loginUsuario();
+        case 'PUT users':
+            verificarJWT();
+            return actualizarUsuario();
+        case 'DELETE users':
+            verificarJWT();
+            return borrarUsuario();
+        default:
+            error_log("No route match found for: $route");
+            throw new Exception('Ruta no encontrada', 404);
     }
-    return true;
 }

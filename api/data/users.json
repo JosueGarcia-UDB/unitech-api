@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "nombre": "Juan P\u00e9rez",
+        "email": "juan@example.com",
+        "password": "pedroypabl0",
+        "fechaRegistro": "2024-02-20 09:00:00"
+    },
+    {
+        "id": 2,
+        "nombre": "Mar\u00eda Garc\u00eda",
+        "email": "maria@example.com",
+        "password": "maria123",
+        "fechaRegistro": "2024-02-20 10:00:00"
+    },
+    {
+        "id": 3,
+        "nombre": "Luis Rodr\u00edguez",
+        "email": "luis@example.com",
+        "password": "$2y$10$PqdKrLKZYnix4PGEjywe8Olhu4Oyq45HKyi2OZLfHvAvUsj\/laAl6",
+        "fechaRegistro": "2025-02-22 05:42:41"
+    }
+]

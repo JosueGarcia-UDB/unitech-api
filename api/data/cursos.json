@@ -1,31 +1,34 @@
-{
-  "cursos": [
+[
     {
-      "id": 1,
-      "titulo": "Introducción a la Programación",
-      "categoria": "programacion",
-      "descripcion": "Curso básico de programación para principiantes",
-      "duracion": "8 semanas",
-      "precio": 99,
-      "nivel": "principiante"
+        "id": 1,
+        "nombre": "Introducci\u00f3n a la Programaci\u00f3n Web",
+        "descripcion": "Curso b\u00e1sico de HTML, CSS y JavaScript",
+        "instructor": "Ana Mart\u00ednez",
+        "duracion": "40 horas",
+        "fechaCreacion": "2024-02-20 10:00:00"
     },
     {
-      "id": 2,
-      "titulo": "JavaScript Avanzado",
-      "categoria": "programacion",
-      "descripcion": "Curso avanzado de JavaScript y ES6+",
-      "duracion": "10 semanas",
-      "precio": 149,
-      "nivel": "avanzado"
+        "id": 2,
+        "nombre": "Python para Principiantes",
+        "descripcion": "Aprende los fundamentos de Python desde cero",
+        "instructor": "Carlos Ruiz",
+        "duracion": "30 horas",
+        "fechaCreacion": "2024-02-20 11:00:00"
     },
     {
-      "id": 3,
-      "titulo": "Diseño UX/UI",
-      "categoria": "diseno",
-      "descripcion": "Fundamentos del diseño de experiencia de usuario",
-      "duracion": "6 semanas",
-      "precio": 129,
-      "nivel": "intermedio"
+        "id": 3,
+        "nombre": "Desarrollo Full Stack",
+        "descripcion": "Aprende a desarrollar aplicaciones web completas",
+        "instructor": "Laura S\u00e1nchez",
+        "duracion": "60 horas",
+        "fechaCreacion": "2024-02-20 12:00:00"
+    },
+    {
+        "id": 4,
+        "nombre": "React Avanzado",
+        "descripcion": "Curso avanzado de React y Redux",
+        "instructor": "Pedro L\u00f3pez",
+        "duracion": "45 horas",
+        "fechaCreacion": "2025-02-22 05:35:07"
     }
-  ]
-}
+]

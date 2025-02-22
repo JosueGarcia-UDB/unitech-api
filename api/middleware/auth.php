@@ -14,8 +14,8 @@ function getBearerToken() {
 function validateJWT($token) {
     try {
         $decoded = decodeJWT($token);
-        return !empty($decoded->sub);
+        return !empty($decoded['sub']);
     } catch (Exception $e) {
-        return false;
+        throw new Exception($e->getMessage(), 401);
     }
 }
