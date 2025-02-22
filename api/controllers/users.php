@@ -3,6 +3,18 @@
 
 require_once __DIR__ . '/../utils/json_handler.php';
 
+function getUsers() {
+    try {
+        $users = readJSONFile("users.json");
+        return [
+            'status' => 'success',
+            'message' => 'Usuarios obtenidos exitosamente',
+            'data' => $users
+        ];
+    } catch (Exception $e) {
+        throw new Exception('Error al obtener los usuarios: ' . $e->getMessage(), 500);
+    }
+}
 
 function registrarUsuario() {
     try {

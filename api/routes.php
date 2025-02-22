@@ -23,6 +23,8 @@ function route($method, $uri) {
             return agregarCurso();
         case 'POST users':
             return registrarUsuario();
+        case 'GET users':
+            return getUsers();
         case 'POST users/login':
             return loginUsuario();
         case 'PUT users':

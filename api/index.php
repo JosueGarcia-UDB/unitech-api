@@ -1,13 +1,14 @@
 <?php
-header('Content-Type: application/json');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
+header('Content-Type: application/json'); # Indica que la API responde con JSON
+header('Access-Control-Allow-Origin: *'); #Permite que cualquier dominio acceda a la API
+header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE'); #Define qué métodos HTTP están permitidos
 header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
-// Para debug
+// Para debug, habilita la visualización de errores.
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+//Estos archivos contienen funciones esenciales para el funcionamiento de la API
 require_once __DIR__ . '/routes.php';
 require_once __DIR__ . '/utils/json_handler.php';
 require_once __DIR__ . '/middleware/auth.php';
