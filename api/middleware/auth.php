@@ -19,3 +19,13 @@ function validateJWT($token) {
         throw new Exception($e->getMessage(), 401);
     }
 }
+
+// combina getBearerToken y validateJWT
+function verificarJWT() {
+    try {
+        $token = getBearerToken();
+        return validateJWT($token);
+    } catch (Exception $e) {
+        throw new Exception('Unauthorized: ' . $e->getMessage(), 401);
+    }
+}
