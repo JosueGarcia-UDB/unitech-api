@@ -185,7 +185,7 @@ function borrarUsuario() {
 
         // Reindexar array y guardar cambios
         $usuarios = array_values($usuarios);
-        writeJSONFile('../data/usuarios.json', $usuarios);
+        writeJSONFile('../data/users.json', $usuarios);
 
         return [
             'status' => 'success',
