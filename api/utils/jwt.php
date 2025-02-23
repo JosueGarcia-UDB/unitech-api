@@ -1,22 +1,33 @@
 <?php
 // utils/jwt.php
 
-function generateJWT($userId, $secret = 'your-secret-key', $expiresIn = 3600) {
-    $header = base64_encode(json_encode([
+function base64UrlEncode($data) {
+    return str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($data));
+}
+
+function base64UrlDecode($data) {
+    $padding = strlen($data) % 4;
+    if ($padding) {
+        $data .= str_repeat('=', 4 - $padding);
+    }
+    return base64_decode(str_replace(['-', '_'], ['+', '/'], $data));
+}
+
+function generateJWT($payload, $secret = 'your-secret-key', $expiresIn = 3600) {
+    $payload['iat'] = time();
+    $payload['exp'] = time() + $expiresIn;
+
+    $header = base64UrlEncode(json_encode([
         'typ' => 'JWT',
         'alg' => 'HS256'
     ]));
 
-    $payload = base64_encode(json_encode([
-        'sub' => $userId,
-        'iat' => time(),
-        'exp' => time() + $expiresIn
-    ]));
+    $payloadEncoded = base64UrlEncode(json_encode($payload));
 
-    $signature = hash_hmac('sha256', "$header.$payload", $secret, true);
-    $signature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
+    $signature = hash_hmac('sha256', "$header.$payloadEncoded", $secret, true);
+    $signatureEncoded = base64UrlEncode($signature);
 
-    return "$header.$payload.$signature";
+    return "$header.$payloadEncoded.$signatureEncoded";
 }
 
 function decodeJWT($token, $secret = 'your-secret-key') {
@@ -25,7 +36,10 @@ function decodeJWT($token, $secret = 'your-secret-key') {
         throw new Exception('Invalid token format', 401);
     }
 
-    $payload = json_decode(base64_decode($parts[1]), true);
+    list($headerB64, $payloadB64, $signatureB64) = $parts;
+
+    // Decodificar el payload usando base64UrlDecode
+    $payload = json_decode(base64UrlDecode($payloadB64), true);
     if (!$payload) {
         throw new Exception('Invalid payload', 401);
     }
@@ -34,10 +48,11 @@ function decodeJWT($token, $secret = 'your-secret-key') {
         throw new Exception('Token expired', 401);
     }
 
-    $signature = hash_hmac('sha256', "$parts[0].$parts[1]", $secret, true);
-    $signature = str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($signature));
+    // Verificar la firma
+    $signatureCheck = hash_hmac('sha256', "$headerB64.$payloadB64", $secret, true);
+    $signatureCheckB64 = base64UrlEncode($signatureCheck);
 
-    if ($signature !== $parts[2]) {
+    if (!hash_equals($signatureCheckB64, $signatureB64)) {
         throw new Exception('Invalid signature', 401);
     }
 

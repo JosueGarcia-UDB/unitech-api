@@ -18,12 +18,15 @@ function route($method, $uri) {
 
     switch ($route) {
         case 'GET cursos':
+            verificarJWT('admin'); // Solo admin puede ver cursos
             return getCursos();
         case 'POST cursos':
+            verificarJWT('admin'); // Solo admin puede agregar cursos
             return agregarCurso();
         case 'POST users':
             return registrarUsuario();
         case 'GET users':
+            verificarJWT('admin'); // Solo admin puede ver usuarios
             return getUsers();
         case 'POST users/login':
             return loginUsuario();
@@ -34,7 +37,7 @@ function route($method, $uri) {
             verificarJWT();
             return borrarUsuario();
         default:
-            error_log("No route match found for: $route");
             throw new Exception('Ruta no encontrada', 404);
     }
+
 }

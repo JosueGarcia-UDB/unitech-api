@@ -15,9 +15,17 @@
     },
     {
         "id": 3,
-        "nombre": "Josue Garcia Estrada",
-        "email": "josueduardo@example.com",
-        "password": "$2y$10$zOZCeUUKNJgVlpMQwyt.Ze.CnOvBHvlFb1yL7ajtlx5uzjkWfpKuC",
-        "fechaRegistro": "2025-02-22 16:14:02"
+        "nombre": "Josue Eduardo Garcia Estrada",
+        "email": "josue.dev@gmail.com",
+        "password": "$2y$10$WwqK4k\/ZLnmGXLtT27PBuuD0uITwWnkDjuXr\/16L44bi4F7VVkGuq",
+        "fechaRegistro": "2025-02-22 17:02:14"
+    },
+    {
+        "id": 5,
+        "nombre": "Fernando",
+        "email": "Fernando@example.com",
+        "password": "$2y$10$yJ82SdccChK.0XtuVxImGOtLwbLLK67p9RVMg31dH8ekiXCe8aIOi",
+        "rol": "usuario",
+        "fechaRegistro": "2025-02-23 01:14:26"
     }
 ]

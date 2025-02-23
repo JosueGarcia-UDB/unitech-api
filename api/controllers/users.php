@@ -18,7 +18,6 @@ function getUsers() {
 
 function registrarUsuario() {
     try {
-        // Obtener datos del request
         $data = json_decode(file_get_contents('php://input'), true);
         if (!$data) {
             throw new Exception('No se recibieron datos del usuario', 400);
@@ -47,6 +46,18 @@ function registrarUsuario() {
             }
         }
 
+        // Asignar rol (solo un admin puede crear otro admin)
+        $rol = 'usuario'; // Por defecto
+        if (isset($data['rol']) && $data['rol'] === 'admin') {
+            // Verificar si el usuario autenticado es admin
+            $token = getAuthToken();
+            $payload = decodeJWT($token);
+            if ($payload['rol'] !== 'admin') {
+                throw new Exception('Solo un admin puede crear otro admin', 403);
+            }
+            $rol = 'admin';
+        }
+
         // Hashear password
         $hashedPassword = password_hash($data['password'], PASSWORD_DEFAULT);
 
@@ -56,6 +67,7 @@ function registrarUsuario() {
             'nombre' => $data['nombre'],
             'email' => $data['email'],
             'password' => $hashedPassword,
+            'rol' => $rol, // Agregamos el rol
             'fechaRegistro' => date('Y-m-d H:i:s')
         ];
 
@@ -76,15 +88,14 @@ function registrarUsuario() {
     }
 }
 
+
 function loginUsuario() {
     try {
-        // Obtener datos del request
         $data = json_decode(file_get_contents('php://input'), true);
         if (!isset($data['email']) || !isset($data['password'])) {
             throw new Exception('Email y password son requeridos', 400);
         }
 
-        // Leer usuarios
         $usuarios = readJSONFile('../data/users.json');
 
         // Buscar usuario por email
@@ -100,10 +111,12 @@ function loginUsuario() {
             throw new Exception('Credenciales inválidas', 401);
         }
 
-        // Generar JWT
-        $token = generateJWT($usuario['id']);
+        // Generar JWT incluyendo el rol
+        $token = generateJWT([
+            'sub' => $usuario['id'],
+            'rol' => $usuario['rol']
+        ]);
 
-        // Remover password del response
         unset($usuario['password']);
 
         return [
@@ -119,37 +132,26 @@ function loginUsuario() {
     }
 }
 
+
 function actualizarUsuario() {
     try {
-        // Obtener datos del request
-        $data = json_decode(file_get_contents('php://input'), true);
-        if (!$data) {
-            throw new Exception('No se recibieron datos para actualizar', 400);
-        }
-
-        // Obtener ID del usuario del token
-        $token = getAuthToken();
-        $payload = decodeJWT($token);
+        $payload = verificarJWT(); // Validar token y obtener payload
         $userId = $payload['sub'];
 
         // Leer usuarios
         $usuarios = readJSONFile('../data/users.json');
 
-        // Encontrar y actualizar usuario
+        // Obtener los datos enviados por el usuario
+        $inputData = json_decode(file_get_contents("php://input"), true);
+        if (!$inputData) {
+            throw new Exception('Datos inválidos', 400);
+        }
+
         $usuarioActualizado = false;
-        foreach ($usuarios as &$usuario) {
-            if ($usuario['id'] === $userId) {
-                // Actualizar campos permitidos
-                if (isset($data['nombre'])) $usuario['nombre'] = $data['nombre'];
-                if (isset($data['email'])) {
-                    if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-                        throw new Exception('Formato de email inválido', 400);
-                    }
-                    $usuario['email'] = $data['email'];
-                }
-                if (isset($data['password'])) {
-                    $usuario['password'] = password_hash($data['password'], PASSWORD_DEFAULT);
-                }
+        foreach ($usuarios as $key => $usuario) {
+            if ($usuario['id'] === $userId) { // Solo puede actualizarse a sí mismo
+                // Actualizar solo los campos permitidos (evitar cambios en ID)
+                $usuarios[$key] = array_merge($usuario, array_intersect_key($inputData, $usuario));
                 $usuarioActualizado = true;
                 break;
             }
@@ -159,7 +161,7 @@ function actualizarUsuario() {
             throw new Exception('Usuario no encontrado', 404);
         }
 
-        // Guardar cambios
+        // Guardar cambios en el archivo JSON
         writeJSONFile('../data/users.json', $usuarios);
 
         return [
@@ -171,20 +173,20 @@ function actualizarUsuario() {
     }
 }
 
+
 function borrarUsuario() {
     try {
-        // Obtener ID del usuario del token
-        $token = getAuthToken();
-        $payload = decodeJWT($token);
+        // Obtener ID del usuario desde el token
+        $payload = verificarJWT(); // Validar token y obtener payload
         $userId = $payload['sub'];
 
         // Leer usuarios
         $usuarios = readJSONFile('../data/users.json');
 
-        // Encontrar y eliminar usuario
+        // Verificar que el usuario existe
         $usuarioEliminado = false;
         foreach ($usuarios as $key => $usuario) {
-            if ($usuario['id'] === $userId) {
+            if ($usuario['id'] === $userId) { // Solo puede eliminarse a sí mismo
                 unset($usuarios[$key]);
                 $usuarioEliminado = true;
                 break;
@@ -207,6 +209,7 @@ function borrarUsuario() {
         throw new Exception('Error al eliminar usuario: ' . $e->getMessage(), $e->getCode() ?: 500);
     }
 }
+
 
 // Función auxiliar para obtener el token de autorización
 function getAuthToken() {
