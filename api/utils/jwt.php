@@ -13,7 +13,7 @@ function base64UrlDecode($data) {
     return base64_decode(str_replace(['-', '_'], ['+', '/'], $data));
 }
 
-function generateJWT($payload, $secret = 'your-secret-key', $expiresIn = 3600) {
+function generateJWT($payload, $secret = 's4lv4me n3gr31r4', $expiresIn = 3600) {
     $payload['iat'] = time();
     $payload['exp'] = time() + $expiresIn;
 
@@ -30,7 +30,7 @@ function generateJWT($payload, $secret = 'your-secret-key', $expiresIn = 3600) {
     return "$header.$payloadEncoded.$signatureEncoded";
 }
 
-function decodeJWT($token, $secret = 'your-secret-key') {
+function decodeJWT($token, $secret = 's4lv4me n3gr31r4') {
     $parts = explode('.', $token);
     if (count($parts) !== 3) {
         throw new Exception('Invalid token format', 401);
