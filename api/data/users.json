@@ -1,31 +1,10 @@
 [
     {
         "id": 1,
-        "nombre": "Juan P\u00e9rez",
-        "email": "juan@example.com",
-        "password": "pedroypabl0",
-        "fechaRegistro": "2024-02-20 09:00:00"
-    },
-    {
-        "id": 2,
-        "nombre": "Mar\u00eda Garc\u00eda",
-        "email": "maria@example.com",
-        "password": "maria123",
-        "fechaRegistro": "2024-02-20 10:00:00"
-    },
-    {
-        "id": 3,
-        "nombre": "Josue Eduardo Garcia Estrada",
-        "email": "josue.dev@gmail.com",
-        "password": "$2y$10$WwqK4k\/ZLnmGXLtT27PBuuD0uITwWnkDjuXr\/16L44bi4F7VVkGuq",
-        "fechaRegistro": "2025-02-22 17:02:14"
-    },
-    {
-        "id": 5,
-        "nombre": "Fernando",
-        "email": "Fernando@example.com",
-        "password": "$2y$10$yJ82SdccChK.0XtuVxImGOtLwbLLK67p9RVMg31dH8ekiXCe8aIOi",
-        "rol": "usuario",
-        "fechaRegistro": "2025-02-23 01:14:26"
+        "nombre": "Administrador",
+        "email": "admin@example.com",
+        "password": "$2y$10$Ika6c1r28Sx2M7FgwgN9au07jvEHJ2.AWS0DBBxKos8rbLTAZx6w.",
+        "rol": "admin",
+        "fechaRegistro": "2025-02-23 02:55:14"
     }
 ]

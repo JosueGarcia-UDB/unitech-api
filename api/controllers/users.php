@@ -47,15 +47,21 @@ function registrarUsuario() {
         }
 
         // Asignar rol (solo un admin puede crear otro admin)
-        $rol = 'usuario'; // Por defecto
+        $rol = 'usuario';
+
         if (isset($data['rol']) && $data['rol'] === 'admin') {
-            // Verificar si el usuario autenticado es admin
-            $token = getAuthToken();
-            $payload = decodeJWT($token);
-            if ($payload['rol'] !== 'admin') {
-                throw new Exception('Solo un admin puede crear otro admin', 403);
+            // Si no hay usuarios registrados, permitir crear el primer admin sin token
+            if (count($usuarios) === 0) {
+                $rol = 'admin';
+            } else {
+                // Verificar si el usuario autenticado es admin
+                $token = getAuthToken();
+                $payload = decodeJWT($token);
+                if ($payload['rol'] !== 'admin') {
+                    throw new Exception('Solo un admin puede crear otro admin', 403);
+                }
+                $rol = 'admin';
             }
-            $rol = 'admin';
         }
 
         // Hashear password
